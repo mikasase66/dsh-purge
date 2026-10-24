@@ -1,3 +1,19 @@
+# 1.1.79-rc3compat.1
+
+## 中文
+
+- 版本 **1.1.79-rc3compat.1**（本地适配版，非上游发布）。适配 **官方仓库 `deepseek-ai/deepseek-harness` master / 源码构建**：`assemble()` 的两次 `return` 增加了 `tools` 透传，`return transformed` 变成 `return { ...transformed, tools }`，patch #40 的整块字面量 pattern 全部失配，注入段在 complete 预设下被丢弃。
+- 修法不再整块匹配：只锚定 `sections: completeSection === void 0 ? transformed.sections : [completeSection]` 这一个三元，替换时保留 `tools`、`contexts` 原样，缩进/分号/引号/多行 waterfall 都不影响命中。
+- `dshTarget` 标为 `0.2.1-rc.3`。**桌面端 tag `dsh-v0.2.1-rc.3` 本身没有 tools 透传**，旧 pattern 仍可命中，此改动对桌面端无行为变化（已回归验证）。
+- 回归：`work/rc3-check/run.mjs` 覆盖 tag 原件、esbuild 风格、ts 源码风格三种产物，均命中、幂等、`node --check` 通过。
+
+## English
+
+- **1.1.79-rc3compat.1** (local compat build, not an upstream release). Adapts to the official `deepseek-ai/deepseek-harness` **master / source builds**: `assemble()` now passes `tools` through, so `return transformed` became `return { ...transformed, tools }` and every literal pattern in patch #40 misses, dropping the inject section under complete presets.
+- Instead of matching the whole block, the patch anchors on the single ternary `sections: completeSection === void 0 ? transformed.sections : [completeSection]` and preserves `tools` / `contexts` verbatim; indentation, semicolons, quotes and multi-line waterfall calls no longer matter.
+- `dshTarget` is `0.2.1-rc.3`. The desktop tag `dsh-v0.2.1-rc.3` has no `tools` passthrough, so old patterns still apply there — no behavior change on desktop (regression-tested).
+- Regression: `work/rc3-check/run.mjs` covers tag artifact, esbuild-style and TS-source-style outputs; all hit, are idempotent, and pass `node --check`.
+
 # 1.1.78
 
 ## 中文
